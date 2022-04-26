@@ -16,14 +16,15 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +46,7 @@ import com.example.android.architecture.blueprints.todoapp.util.SnackbarUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Display a grid of {@link Task}s. User can choose to view all, active or completed tasks.
  */
@@ -58,6 +60,7 @@ public class TasksFragment extends Fragment {
 
     private Observable.OnPropertyChangedCallback mSnackbarCallback;
 
+
     public TasksFragment() {
         // Requires empty public constructor
     }
@@ -66,27 +69,49 @@ public class TasksFragment extends Fragment {
         return new TasksFragment();
     }
 
+
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mTasksFragBinding = TasksFragBinding.inflate(inflater, container, false);
+
+        mTasksFragBinding.setView(this);
+        mTasksFragBinding.setViewmodel(mTasksViewModel);
+
+        setHasOptionsMenu(true);
+
+        return mTasksFragBinding.getRoot();
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setup();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         mTasksViewModel.start();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mTasksFragBinding = TasksFragBinding.inflate(inflater, container, false);
+    public void onDestroy() {
+        mListAdapter.onDestroy();
+        if (mSnackbarCallback != null) {
+            mTasksViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
+        }
+        super.onDestroy();
+    }
 
-        mTasksFragBinding.setView(this);
 
-        mTasksFragBinding.setViewmodel(mTasksViewModel);
-
-        setHasOptionsMenu(true);
-
-        View root = mTasksFragBinding.getRoot();
-
-        return root;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks_fragment_menu, menu);
     }
 
     @Override
@@ -105,46 +130,13 @@ public class TasksFragment extends Fragment {
         return true;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.tasks_fragment_menu, menu);
-    }
+
+
 
     public void setViewModel(TasksViewModel viewModel) {
         mTasksViewModel = viewModel;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setupSnackbar();
-
-        setupFab();
-
-        setupListAdapter();
-
-        setupRefreshLayout();
-    }
-
-    @Override
-    public void onDestroy() {
-        mListAdapter.onDestroy();
-        if (mSnackbarCallback != null) {
-            mTasksViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
-        }
-        super.onDestroy();
-    }
-
-    private void setupSnackbar() {
-        mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable observable, int i) {
-                SnackbarUtils.showSnackbar(getView(), mTasksViewModel.getSnackbarText());
-            }
-        };
-        mTasksViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
-    }
 
     private void showFilteringPopUpMenu() {
         PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
@@ -171,17 +163,30 @@ public class TasksFragment extends Fragment {
         popup.show();
     }
 
-    private void setupFab() {
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
 
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+
+    private void setup() {
+        setupSnackbar();
+        setupFab();
+        setupListAdapter();
+        setupRefreshLayout();
+    }
+
+    private void setupSnackbar() {
+        mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
             @Override
-            public void onClick(View v) {
-                mTasksViewModel.addNewTask();
+            public void onPropertyChanged(Observable observable, int i) {
+                SnackbarUtils.showSnackbar(getView(), mTasksViewModel.getSnackbarText());
             }
-        });
+        };
+        mTasksViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_task);
+        fab.setImageResource(R.drawable.ic_add);
+        fab.setOnClickListener(v -> mTasksViewModel.addNewTask());
     }
 
     private void setupListAdapter() {
@@ -206,6 +211,9 @@ public class TasksFragment extends Fragment {
         // Set the scrolling view in the custom SwipeRefreshLayout.
         swipeRefreshLayout.setScrollUpChild(listView);
     }
+
+
+
 
     public static class TasksAdapter extends BaseAdapter {
 

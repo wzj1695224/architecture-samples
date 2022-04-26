@@ -17,7 +17,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
 
         <variable
@@ -29,6 +28,7 @@
             type="com.example.android.architecture.blueprints.todoapp.tasks.TasksViewModel" />
 
     </data>
+
 
 <com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout
     android:id="@+id/refresh_layout"
@@ -77,7 +77,6 @@
             android:layout_centerInParent="true"
             android:orientation="vertical"
             android:visibility="@{viewmodel.empty ? View.VISIBLE : View.GONE}">
-
 
             <ImageView
                 android:id="@+id/noTasksIcon"
