@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.data.source.local;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -27,9 +28,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import androidx.room.Room;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.filters.LargeTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
@@ -62,7 +62,7 @@ public class TasksLocalDataSourceTest {
     @Before
     public void setup() {
         // using an in-memory database for testing, since it doesn't survive killing the process
-        mDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        mDatabase = Room.inMemoryDatabaseBuilder(getApplicationContext(),
                 ToDoDatabase.class)
                 .build();
         TasksDao tasksDao = mDatabase.taskDao();

@@ -16,11 +16,18 @@
 
 package com.example.android.architecture.blueprints.todoapp.statistics;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.containsString;
+
 import android.content.Intent;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.android.architecture.blueprints.todoapp.R;
 import com.example.android.architecture.blueprints.todoapp.data.FakeTasksRemoteDataSource;
@@ -31,12 +38,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.containsString;
 
 /**
  * Tests for the statistics screen.
@@ -72,10 +73,10 @@ public class StatisticsScreenTest {
     @Test
     public void Tasks_ShowsNonEmptyMessage() throws Exception {
         // Check that the active and completed tasks text is displayed
-        String expectedActiveTaskText = InstrumentationRegistry.getTargetContext()
+        String expectedActiveTaskText = getApplicationContext()
                 .getString(R.string.statistics_active_tasks, 1);
         onView(withText(containsString(expectedActiveTaskText))).check(matches(isDisplayed()));
-        String expectedCompletedTaskText = InstrumentationRegistry.getTargetContext()
+        String expectedCompletedTaskText = getApplicationContext()
                 .getString(R.string.statistics_completed_tasks, 1);
         onView(withText(containsString(expectedCompletedTaskText))).check(matches(isDisplayed()));
     }

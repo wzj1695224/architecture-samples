@@ -117,9 +117,9 @@ public class AddEditTaskActivity extends AppCompatActivity implements AddEditTas
                 (ViewModelHolder<AddEditTaskViewModel>) getSupportFragmentManager()
                         .findFragmentByTag(ADD_EDIT_VIEWMODEL_TAG);
 
-        if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
             // If the model was retained, return it.
-            return retainedViewModel.getViewmodel();
+            return retainedViewModel.getViewModel();
         } else {
             // There is no ViewModel yet, create it.
             AddEditTaskViewModel viewModel = new AddEditTaskViewModel(

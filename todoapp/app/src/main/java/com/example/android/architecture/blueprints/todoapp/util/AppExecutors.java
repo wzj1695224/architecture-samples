@@ -48,8 +48,7 @@ public class AppExecutors {
     }
 
     public AppExecutors() {
-        this(new DiskIOThreadExecutor(), Executors.newFixedThreadPool(THREAD_COUNT),
-                new MainThreadExecutor());
+        this(new DiskIOThreadExecutor(), Executors.newFixedThreadPool(THREAD_COUNT), new MainThreadExecutor());
     }
 
     public Executor diskIO() {

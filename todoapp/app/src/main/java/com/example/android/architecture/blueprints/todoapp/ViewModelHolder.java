@@ -16,7 +16,6 @@
 
 package com.example.android.architecture.blueprints.todoapp;
 
-
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,11 +31,13 @@ public class ViewModelHolder<VM> extends Fragment {
 
     public ViewModelHolder() { }
 
-    public static <M> ViewModelHolder createContainer(@NonNull M viewModel) {
+
+    public static <M> ViewModelHolder<M> createContainer(@NonNull M viewModel) {
         ViewModelHolder<M> viewModelContainer = new ViewModelHolder<>();
         viewModelContainer.setViewModel(viewModel);
         return viewModelContainer;
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +45,8 @@ public class ViewModelHolder<VM> extends Fragment {
         setRetainInstance(true);
     }
 
-    @Nullable public VM getViewmodel() {
+    @Nullable
+    public VM getViewModel() {
         return mViewModel;
     }
 

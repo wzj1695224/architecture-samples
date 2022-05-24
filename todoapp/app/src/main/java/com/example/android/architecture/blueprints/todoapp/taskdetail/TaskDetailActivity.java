@@ -80,9 +80,9 @@ public class TaskDetailActivity extends AppCompatActivity implements TaskDetailN
                 (ViewModelHolder<TaskDetailViewModel>) getSupportFragmentManager()
                         .findFragmentByTag(TASKDETAIL_VIEWMODEL_TAG);
 
-        if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
             // If the model was retained, return it.
-            return retainedViewModel.getViewmodel();
+            return retainedViewModel.getViewModel();
         } else {
             // There is no ViewModel yet, create it.
             TaskDetailViewModel viewModel = new TaskDetailViewModel(

@@ -16,7 +16,14 @@
 
 package com.example.android.architecture.blueprints.todoapp.data.source;
 
-import android.content.Context;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
 import com.google.common.collect.Lists;
@@ -30,15 +37,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for the implementation of the in-memory repository with cache.
@@ -58,13 +56,10 @@ public class TasksRepositoryTest {
 
     @Mock
     private TasksDataSource mTasksRemoteDataSource;
-
     @Mock
     private TasksDataSource mTasksLocalDataSource;
-
     @Mock
     private TasksDataSource.GetTaskCallback mGetTaskCallback;
-
     @Mock
     private TasksDataSource.LoadTasksCallback mLoadTasksCallback;
 
@@ -73,6 +68,9 @@ public class TasksRepositoryTest {
 
     @Captor
     private ArgumentCaptor<TasksDataSource.GetTaskCallback> mTaskCallbackCaptor;
+
+
+
 
     @Before
     public void setupTasksRepository() {
@@ -85,10 +83,14 @@ public class TasksRepositoryTest {
                 mTasksRemoteDataSource, mTasksLocalDataSource);
     }
 
+
     @After
     public void destroyRepositoryInstance() {
         TasksRepository.destroyInstance();
     }
+
+
+
 
     @Test
     public void getTasks_repositoryCachesAfterFirstApiCall() {
@@ -99,6 +101,7 @@ public class TasksRepositoryTest {
         // Then tasks were only requested once from Service API
         verify(mTasksRemoteDataSource).getTasks(any(TasksDataSource.LoadTasksCallback.class));
     }
+
 
     @Test
     public void getTasks_requestsAllTasksFromLocalDataSource() {
@@ -335,6 +338,7 @@ public class TasksRepositoryTest {
         verify(mTasksLocalDataSource, times(TASKS.size())).saveTask(any(Task.class));
     }
 
+
     /**
      * Convenience method that issues two calls to the tasks repository
      */
@@ -357,6 +361,7 @@ public class TasksRepositoryTest {
 
         mTasksRepository.getTasks(callback); // Second call to API
     }
+
 
     private void setTasksNotAvailable(TasksDataSource dataSource) {
         verify(dataSource).getTasks(mTasksCallbackCaptor.capture());

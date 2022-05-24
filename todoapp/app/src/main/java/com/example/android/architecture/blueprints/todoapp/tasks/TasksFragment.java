@@ -142,22 +142,20 @@ public class TasksFragment extends Fragment {
         PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.active:
-                        mTasksViewModel.setFiltering(TasksFilterType.ACTIVE_TASKS);
-                        break;
-                    case R.id.completed:
-                        mTasksViewModel.setFiltering(TasksFilterType.COMPLETED_TASKS);
-                        break;
-                    default:
-                        mTasksViewModel.setFiltering(TasksFilterType.ALL_TASKS);
-                        break;
-                }
-                mTasksViewModel.loadTasks(false);
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.active:
+                    mTasksViewModel.setFiltering(TasksFilterType.ACTIVE_TASKS);
+                    break;
+                case R.id.completed:
+                    mTasksViewModel.setFiltering(TasksFilterType.COMPLETED_TASKS);
+                    break;
+                default:
+                    mTasksViewModel.setFiltering(TasksFilterType.ALL_TASKS);
+                    break;
             }
+            mTasksViewModel.loadTasks(false);
+            return true;
         });
 
         popup.show();
@@ -193,7 +191,7 @@ public class TasksFragment extends Fragment {
         ListView listView =  mTasksFragBinding.tasksList;
 
         mListAdapter = new TasksAdapter(
-                new ArrayList<Task>(0),
+                new ArrayList<>(0),
                 (TasksActivity) getActivity(),
                 Injection.provideTasksRepository(getContext().getApplicationContext()),
                 mTasksViewModel);
@@ -202,7 +200,8 @@ public class TasksFragment extends Fragment {
 
     private void setupRefreshLayout() {
         ListView listView =  mTasksFragBinding.tasksList;
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout = mTasksFragBinding.refreshLayout;
+
+        ScrollChildSwipeRefreshLayout swipeRefreshLayout = mTasksFragBinding.refreshLayout;
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),
@@ -232,7 +231,6 @@ public class TasksFragment extends Fragment {
             mTasksRepository = tasksRepository;
             mTasksViewModel = tasksViewModel;
             setList(tasks);
-
         }
 
         public void onDestroy() {

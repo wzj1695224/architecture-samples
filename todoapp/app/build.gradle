@@ -27,7 +27,6 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
     }
-    flavorDimensions "default"
 
     flavorDimensions "default"
 
@@ -39,6 +38,15 @@ android {
         }
         prod {
             dimension "default"
+        }
+    }
+
+    sourceSets {
+        mock {
+            java.srcDirs 'src/mock/java'
+        }
+        prod {
+            java.srcDirs 'src/prod/java'
         }
     }
 

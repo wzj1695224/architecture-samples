@@ -59,54 +59,25 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.statistics_act);
 
         setupToolbar();
-
         setupNavigationDrawer();
 
-        StatisticsFragment statisticsFragment = findOrCreateViewFragment();
-
         StatisticsViewModel statisticsViewModel = findOrCreateViewModel();
-
+        StatisticsFragment statisticsFragment = findOrCreateViewFragment();
         // Link View and ViewModel
         statisticsFragment.setViewModel(statisticsViewModel);
     }
 
-    @NonNull
-    private StatisticsViewModel findOrCreateViewModel() {
-        // In a configuration change we might have a ViewModel present. It's retained using the
-        // Fragment Manager.
-        @SuppressWarnings("unchecked")
-        ViewModelHolder<StatisticsViewModel> retainedViewModel =
-                (ViewModelHolder<StatisticsViewModel>) getSupportFragmentManager()
-                        .findFragmentByTag(STATS_VIEWMODEL_TAG);
 
-        if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
-            // If the model was retained, return it.
-            return retainedViewModel.getViewmodel();
-        } else {
-            // There is no ViewModel yet, create it.
-            StatisticsViewModel viewModel = new StatisticsViewModel(getApplicationContext(),
-                    Injection.provideTasksRepository(getApplicationContext()));
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            // and bind it to this Activity's lifecycle using the Fragment Manager.
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(),
-                    ViewModelHolder.createContainer(viewModel),
-                    STATS_VIEWMODEL_TAG);
-            return viewModel;
-        }
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(R.string.statistics_title);
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    @NonNull
-    private StatisticsFragment findOrCreateViewFragment() {
-        StatisticsFragment statisticsFragment = (StatisticsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrame);
-        if (statisticsFragment == null) {
-            statisticsFragment = StatisticsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    statisticsFragment, R.id.contentFrame);
-        }
-        return statisticsFragment;
-    }
 
     private void setupNavigationDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -117,35 +88,64 @@ public class StatisticsActivity extends AppCompatActivity {
         }
     }
 
-    private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.statistics_title);
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
-    }
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.list_navigation_menu_item:
-                                NavUtils.navigateUpFromSameTask(StatisticsActivity.this);
-                                break;
-                            case R.id.statistics_navigation_menu_item:
-                                // Do nothing, we're already on that screen
-                                break;
-                            default:
-                                break;
-                        }
-                        // Close the navigation drawer when an item is selected.
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
+                menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.list_navigation_menu_item:
+                            NavUtils.navigateUpFromSameTask(StatisticsActivity.this);
+                            break;
+                        case R.id.statistics_navigation_menu_item:
+                            // Do nothing, we're already on that screen
+                            break;
+                        default:
+                            break;
                     }
+                    // Close the navigation drawer when an item is selected.
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
+                    return true;
                 });
+    }
+
+
+    @NonNull
+    private StatisticsViewModel findOrCreateViewModel() {
+        // In a configuration change we might have a ViewModel present. It's retained using the
+        // Fragment Manager.
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<StatisticsViewModel> retainedViewModel = (ViewModelHolder<StatisticsViewModel>)
+                getSupportFragmentManager().findFragmentByTag(STATS_VIEWMODEL_TAG);
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
+            // If the model was retained, return it.
+            return retainedViewModel.getViewModel();
+        }
+
+        // There is no ViewModel yet, create it.
+        StatisticsViewModel viewModel = new StatisticsViewModel(getApplicationContext(),
+                Injection.provideTasksRepository(getApplicationContext()));
+
+        // and bind it to this Activity's lifecycle using the Fragment Manager.
+        ViewModelHolder<StatisticsViewModel> viewModelHolder = ViewModelHolder.createContainer(viewModel);
+        ActivityUtils.addFragmentToActivity(
+                getSupportFragmentManager(),
+                viewModelHolder,
+                STATS_VIEWMODEL_TAG);
+
+        return viewModel;
+    }
+
+    @NonNull
+    private StatisticsFragment findOrCreateViewFragment() {
+        StatisticsFragment statisticsFragment = (StatisticsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (statisticsFragment == null) {
+            statisticsFragment = StatisticsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(),
+                    statisticsFragment,
+                    R.id.contentFrame);
+        }
+        return statisticsFragment;
     }
 }

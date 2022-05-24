@@ -45,6 +45,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
 /**
  * Tests for the tasks screen, the main screen which contains a list of all tasks.
  */

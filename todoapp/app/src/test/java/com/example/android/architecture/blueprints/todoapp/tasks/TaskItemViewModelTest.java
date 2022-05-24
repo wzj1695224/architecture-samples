@@ -49,19 +49,17 @@ public class TaskItemViewModelTest {
 
     @Mock
     private TasksRepository mTasksRepository;
-
     @Mock
     private Context mContext;
-
     @Mock
     private TasksActivity mTaskItemNavigator;
-
     @Captor
     private ArgumentCaptor<TasksDataSource.GetTaskCallback> mLoadTasksCallbackCaptor;
 
     private TaskItemViewModel mTaskItemViewModel;
 
     private Task mTask;
+
 
     @Before
     public void setupTasksViewModel() {
@@ -74,7 +72,6 @@ public class TaskItemViewModelTest {
         // Get a reference to the class under test
         mTaskItemViewModel = new TaskItemViewModel(mContext, mTasksRepository);
         mTaskItemViewModel.setNavigator(mTaskItemNavigator);
-
     }
 
     private void setupContext() {
@@ -84,6 +81,9 @@ public class TaskItemViewModelTest {
 
         when(mContext.getResources()).thenReturn(mock(Resources.class));
     }
+
+
+
 
     @Test
     public void clickOnTask_ShowsDetailUi() {
@@ -95,6 +95,7 @@ public class TaskItemViewModelTest {
         assertEquals(mTaskItemViewModel.title.get(), mTask.getTitle());
         assertEquals(mTaskItemViewModel.description.get(), mTask.getDescription());
     }
+
 
     @Test
     public void nullTask_showsNoData() {
@@ -109,6 +110,7 @@ public class TaskItemViewModelTest {
         assertEquals(mTaskItemViewModel.description.get(), NO_DATA_DESC_STRING);
     }
 
+
     @Test
     public void completeTask_ShowsTaskMarkedComplete() {
         loadTaskIntoViewModel();
@@ -121,6 +123,7 @@ public class TaskItemViewModelTest {
         // Then repository is called
         verify(mTasksRepository).completeTask(mTask);
     }
+
 
     @Test
     public void activateTask_ShowsTaskMarkedActive() {
@@ -135,6 +138,7 @@ public class TaskItemViewModelTest {
         verify(mTasksRepository).activateTask(mTask);
     }
 
+
     @Test
     public void unavailableTasks_ShowsError() {
         loadTaskIntoViewModel();
@@ -144,6 +148,7 @@ public class TaskItemViewModelTest {
         // Then repository is called
         assertFalse(mTaskItemViewModel.isDataAvailable());
     }
+
 
     private void loadTaskIntoViewModel() {
         // Given a stubbed active task

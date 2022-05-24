@@ -53,14 +53,12 @@ public class TasksActivity extends AppCompatActivity implements TaskItemNavigato
         setContentView(R.layout.tasks_act);
 
         setupToolbar();
-
         setupNavigationDrawer();
-
-        TasksFragment tasksFragment = findOrCreateViewFragment();
 
         mViewModel = findOrCreateViewModel();
         mViewModel.setNavigator(this);
 
+        TasksFragment tasksFragment = findOrCreateViewFragment();
         // Link View and ViewModel
         tasksFragment.setViewModel(mViewModel);
     }
@@ -79,9 +77,9 @@ public class TasksActivity extends AppCompatActivity implements TaskItemNavigato
                 (ViewModelHolder<TasksViewModel>) getSupportFragmentManager()
                         .findFragmentByTag(TASKS_VIEWMODEL_TAG);
 
-        if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
             // If the model was retained, return it.
-            return retainedViewModel.getViewmodel();
+            return retainedViewModel.getViewModel();
         } else {
             // There is no ViewModel yet, create it.
             TasksViewModel viewModel = new TasksViewModel(
@@ -108,7 +106,7 @@ public class TasksActivity extends AppCompatActivity implements TaskItemNavigato
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -116,9 +114,9 @@ public class TasksActivity extends AppCompatActivity implements TaskItemNavigato
     }
 
     private void setupNavigationDrawer() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
@@ -137,26 +135,23 @@ public class TasksActivity extends AppCompatActivity implements TaskItemNavigato
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.list_navigation_menu_item:
-                                // Do nothing, we're already on that screen
-                                break;
-                            case R.id.statistics_navigation_menu_item:
-                                Intent intent =
-                                        new Intent(TasksActivity.this, StatisticsActivity.class);
-                                startActivity(intent);
-                                break;
-                            default:
-                                break;
-                        }
-                        // Close the navigation drawer when an item is selected.
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
+                menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.list_navigation_menu_item:
+                            // Do nothing, we're already on that screen
+                            break;
+                        case R.id.statistics_navigation_menu_item:
+                            Intent intent =
+                                    new Intent(TasksActivity.this, StatisticsActivity.class);
+                            startActivity(intent);
+                            break;
+                        default:
+                            break;
                     }
+                    // Close the navigation drawer when an item is selected.
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
+                    return true;
                 });
     }
 

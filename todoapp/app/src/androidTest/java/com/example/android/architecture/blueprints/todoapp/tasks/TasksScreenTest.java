@@ -16,28 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.filters.SdkSuppress;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ListView;
-
-import com.example.android.architecture.blueprints.todoapp.Injection;
-import com.example.android.architecture.blueprints.todoapp.R;
-import com.example.android.architecture.blueprints.todoapp.TestUtils;
-import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static androidx.test.platform.app.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -58,6 +37,27 @@ import static com.example.android.architecture.blueprints.todoapp.TestUtils.getC
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNot.not;
+
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ListView;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.rule.ActivityTestRule;
+
+import com.example.android.architecture.blueprints.todoapp.Injection;
+import com.example.android.architecture.blueprints.todoapp.R;
+import com.example.android.architecture.blueprints.todoapp.TestUtils;
+import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
+
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Tests for the tasks screen, the main screen which contains a list of all tasks.
@@ -90,7 +90,7 @@ public class TasksScreenTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     // Doing this in @Before generates a race condition.
-                    Injection.provideTasksRepository(InstrumentationRegistry.getTargetContext())
+                    Injection.provideTasksRepository(getApplicationContext())
                         .deleteAllTasks();
                 }
             };
@@ -258,7 +258,7 @@ public class TasksScreenTest {
         clickCheckBoxForTask(TITLE2);
 
         // Click clear completed in menu
-        openActionBarOverflowOrOptionsMenu(getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getApplicationContext());
         onView(withText(R.string.menu_clear)).perform(click());
 
         //Verify that completed tasks are not shown

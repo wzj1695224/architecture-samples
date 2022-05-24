@@ -16,12 +16,12 @@
 
 package com.example.android.architecture.blueprints.todoapp.data.source.local;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import androidx.room.Room;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
@@ -44,7 +44,7 @@ public class TasksDaoTest {
     public void initDb() {
         // using an in-memory database because the information stored here disappears when the
         // process is killed
-        mDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        mDatabase = Room.inMemoryDatabaseBuilder(getApplicationContext(),
                 ToDoDatabase.class).build();
     }
 
